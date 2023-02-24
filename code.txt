@@ -1,0 +1,295 @@
+CREATE TABLE Account (
+  Username varchar(15) NOT NULL,
+  Password varchar(20) NOT NULL,
+  Email_Id varchar(35) NOT NULL,
+  Address varchar(50) DEFAULT NULL,
+  PRIMARY KEY (Username)
+);
+
+insert into account values('rai123','007rai','rai007@gmail.com','Varanasi');
+insert into account values('naveen','447nav','nav4457@gmail.com','Jalandhar');
+insert into account values('ravi','rav451992','ravi24144ehb@gmail.com','Banglore');
+insert into account values('mukesh','mukhsb78','mukeshsfa4ehb@gmail.com','Mumbai');
+insert into account values('vikky','vik1128','vikky9982b@gmail.com','Bhopal');
+insert into account values('anshul','ansh711598','arajput1999@gmail.com','Agra');
+
+select * from account;
+
+CREATE TABLE Contact (
+  Username varchar(15) NOT NULL,
+  Phone_No char(10) NOT NULL,
+  PRIMARY KEY (Username,Phone_No),
+  FOREIGN KEY (Username) REFERENCES Account (Username)
+);
+
+insert into contact values('rai123',7521481862);
+insert into contact values('rai123',7451541862);
+insert into contact values('ravi',9754956677);
+insert into contact values('ravi',8874125796);
+insert into contact values('naveen',7785426981);
+insert into contact values('mukesh',8765778592);
+insert into contact values('vikky',9344758664);
+insert into contact values('anshul',7144778554);
+
+select * from contact;
+select distinct username from contact;
+
+CREATE TABLE Passenger(
+  Passenger_Id number(11) NOT NULL,
+  First_Name varchar(20) NOT NULL,
+  Last_Name varchar(20) NOT NULL,
+  Gender char(1) NOT NULL,
+  Phone_No char(10) DEFAULT NULL,
+  Ticket_No number(10) NOT NULL,
+  Age number(11) NOT NULL,
+  Class varchar(20) NOT NULL,
+  PRIMARY KEY (Passenger_Id),
+  FOREIGN KEY (Ticket_No) REFERENCES Ticket(Ticket_No)
+);
+
+insert into Passenger values (101, 'Nishant', 'Rai', 'M', 7521481862 , 1111, 22, 'First Class AC'); 
+insert into Passenger values (102, 'Ravi', 'Gupta', 'M', 9754956677 , 1112, 25, 'Third Class AC'); 
+insert into Passenger values (103, 'Mukesh', 'Sharma', 'M', 8765778592 , 1113, 19, 'Sleepar'); 
+insert into Passenger values (104, 'Vikky', 'Singh', 'M', 9344758664 , 1114, 21, 'Second Class AC');
+insert into Passenger values (105, 'mike', 'tiy', 'M', 9344758664 , 1115, 21, 'Second Class AC'); 
+
+select * from Passenger;
+
+CREATE TABLE Ticket (
+  Ticket_No number(10) NOT NULL,
+  Train_No number(6) NOT NULL,
+  Date_of_Journey varchar(20) NOT NULL,
+  Username varchar(15) NOT NULL,
+  PRIMARY KEY (Ticket_No),
+  FOREIGN KEY (Username) REFERENCES Account (Username),
+  FOREIGN KEY (Train_No) REFERENCES Train (Train_No)
+);
+alter table ticket add Price number(10);
+update ticket set Price=1500 where Ticket_No=1114;
+
+insert into Ticket values(1111,12559,'15/11/22','rai123');
+insert into Ticket values(1112,12560,'20/11/22','ravi');
+insert into Ticket values(1113,12239,'1/12/22','mukesh');
+insert into Ticket values(1114,12240,'11/12/22','vikky');
+insert into Ticket values(1115,12559,'1/1/23','vikky',4000);
+
+select * from ticket;
+
+CREATE TABLE Train (
+  Train_No number(6) NOT NULL,
+  Name varchar(25) NOT NULL,
+  Seat_Sleeper number(4) NOT NULL,
+  Seat_First_Class_AC number(4) NOT NULL,
+  Seat_Second_Class_AC number(4) NOT NULL,
+  Seat_Third_Class_AC number(4) NOT NULL,
+  Wifi char(1) NOT NULL,
+  Food char(1) NOT NULL,
+  Run_On_Sunday char(1) NOT NULL,
+  Run_On_Monday char(1) NOT NULL,
+  Run_On_Tuesday char(1) NOT NULL,
+  Run_On_Wednesday char(1) NOT NULL,
+  Run_On_Thursday char(1) NOT NULL,
+  Run_On_Friday char(1) NOT NULL,
+  Run_On_Saturday char(1) NOT NULL,
+  PRIMARY KEY (Train_No)
+);
+
+insert into train values(12559,'NDLS BSB SF EXP',479,47,96,192,'N','Y','Y','Y','Y','Y','Y','Y','Y');
+insert into train values(12560,'BSB NDLS SF EXP',480,43,96,192,'N','Y','Y','Y','Y','Y','Y','Y','Y');
+insert into train values(12239,'KOTA PATNA EX',432,48,80,144,'N','N','Y','Y','Y','Y','Y','Y','Y');
+insert into train values(12240,'PATNA KOTA EX',432,48,80,144,'N','N','Y','Y','Y','Y','Y','Y','Y');
+
+select * from train;
+
+CREATE TABLE Station(
+  Station_Code char(5) NOT NULL,
+  Station_Name varchar(25) NOT NULL,
+  PRIMARY KEY (Station_Code)
+);
+
+insert into station values('ALD','ALLAHABAD JUNCTION');
+insert into station values('CNB','KANPUR CENTRAL');
+insert into station values('GYN','GYANPUR ROAD');
+insert into station values('GZB','GHAZIABAD JUNCTION');
+insert into station values('LKO','LUCKNOW');
+insert into station values('NDLS','NEW DELHI');
+
+SELECT * FROM STATION;
+
+CREATE TABLE Stoppage(
+  Train_No number(6) NOT NULL,
+  Station_Code char(5) NOT NULL,
+  Arrival_Time varchar(20) DEFAULT NULL,
+  Departure_Time varchar(20) DEFAULT NULL,
+  PRIMARY KEY (Train_No,Station_Code),
+  FOREIGN KEY (Train_No) REFERENCES Train (Train_No),
+  FOREIGN KEY (Station_Code) REFERENCES Station (Station_Code)
+);
+
+insert into stoppage values(12559,'ALD','22:05:00','22:30:00');
+insert into stoppage values(12559,'CNB','01:30:00','01:38:00');
+insert into stoppage values(12559,'LKO','19:20:00','19:30:00');
+insert into stoppage values(12559,'NDLS','08:10:00',NULL);
+insert into stoppage values(12560,'ALD','03:45:00','04:10:00');
+insert into stoppage values(12560,'CNB','01:00:00','01:05:00');
+insert into stoppage values(12560,'LKO','07:00:00',NULL);
+insert into stoppage values(12560,'NDLS','18:35:00','18:55:00');
+insert into stoppage values(12239,'ALD','01:20:00','01:45:00');
+insert into stoppage values(12239,'CNB','04:15:00','04:20:00');
+insert into stoppage values(12239,'GYN','23:31:00','23:33:00');
+insert into stoppage values(12239,'GZB','11:30:00','11:32:00');
+insert into stoppage values(12239,'LKO','22:20:00','22:30:00');
+insert into stoppage values(12239,'NDLS','12:20:00',NULL);
+insert into stoppage values(12240,'ALD','07:45:00','08:15:00');
+insert into stoppage values(12240,'CNB','04:55:00','05:00:00');
+insert into stoppage values(12240,'GYN','09:21:00','09:23:00');
+insert into stoppage values(12240,'GZB','23:03:00','23:05:00');
+insert into stoppage values(12240,'LKO','11:20:00',NULL);
+insert into stoppage values(12240,'NDLS','22:15:00','22:25:00');
+
+select * from stoppage;
+
+create view a(Station_code,Train_no,Arrival_Time)as
+SELECT Stoppage.Station_code,Train_no,Arrival_Time
+from Station inner join Stoppage on station.Station_code=Stoppage.Station_code where
+station.Station_name='LUCKNOW';
+
+select * from a;
+
+create view c(Station_code,Train_no,Arrival_Time,First_Class_seats,Run_on_monday)as
+SELECT Station_code,train.Train_no,Arrival_Time,Seat_First_Class_AC,Run_on_monday
+from train inner join a on train.Train_No=a.Train_No where train.Run_On_Monday='Y' AND
+train.Seat_First_Class_AC >0;
+
+select * from c;
+
+select SUm(First_class_seats)
+from c;
+
+select * from train;
+
+Select Phone_no from Contact where username IN (Select Username from account where
+Email_id='vikky9982b@gmail.com');
+
+
+select count(*) as total
+from account;
+
+create trigger cancellation10
+before delete on ticket 
+for each row  
+BEGIN   
+  set trainno=old.train_no;    
+  set ticketno=old.ticket_no;       
+  SET class = (SELECT p.class 
+               FROM PASSENGER p 
+               WHERE p.ticket_no = ticketno);
+  if class='first class ac' then    
+    UPDATE Train set Seat_First_Class_AC = Seat_First_Class_AC+1 WHERE Train_No = trainno ;   
+  elsif class='sleeper' then        
+    UPDATE Train set Seat_Sleeper = Seat_Sleeper+1 WHERE Train_No = trainno ;   
+  elsif class='second class ac' then       
+    UPDATE Train set Seat_Second_Class_AC = Seat_Second_Class_AC+1 WHERE Train_No = trainno ;    
+  elsif class='third class ac' then        
+    UPDATE Train set Third_Class_AC = Seat_Third_Class_AC+1 WHERE Train_No = trainno ;      
+  end if; 
+END;
+
+DECLARE 
+   ticket_no number(20):= :ticket_no;
+
+BEGIN
+  case
+    when ticket_no = 1111 then dbms_output.put_line('12559 NDLS BSB SF EXP');
+    when ticket_no = 1112 then dbms_output.put_line('12560 BSB NDLS SF EXP');
+    when ticket_no = 1113 then dbms_output.put_line('12239 KOTA PATNA EXP');
+    when ticket_no = 1114 then dbms_output.put_line('12240 PATNA KOTA EXP');
+    --else dbms_output.put_line('PREMIUM MODEL');
+  END CASE;
+
+Exception
+   when case_not_found
+   Then
+dbms_output.put_line('Not a valid ticket number');
+END;
+
+
+select * from ticket;
+
+DECLARE 
+  p_id passenger.passenger_id%type := :p_id;
+  p_name passenger.first_name%type;
+  p_lname passenger.last_name%type;
+  p_age passenger.age%type;
+  --User defined Exception
+  ex_invalid_id EXCEPTION;
+
+BEGIN 
+  IF p_id <=101 THEN
+   RAISE ex_invalid_id;
+  ELSE
+     select first_name, last_name, age into p_name, p_lname, p_age
+     FROM passenger
+     WHERE passenger_id=p_id;
+     dbms_output.put_line('Name : ' || p_name ||' ' || p_lname);
+     dbms_output.put_line('Age :' || p_age);
+  END IF;
+
+EXCEPTION
+  WHEN ex_invalid_id THEN
+  dbms_output.put_line('Id should be greater than 100');
+  WHEN no_data_found THEN
+  dbms_output.put_line('Passenger does not exist');
+  WHEN others THEN
+  dbms_output.put_line('Error');
+END;
+
+declare
+p_id passenger.passenger_id%type;
+p_name passenger.First_name%type;
+p_age passenger.age%type;
+CURSOR p_passenger is
+  select passenger_id, First_name, age from passenger;
+begin
+open p_passenger;
+loop
+fetch p_passenger into p_id,p_name,p_age;
+exit when p_passenger%notfound;
+dbms_output.put_line(p_id || ' ' || p_name ||' ' || p_age);
+end loop;
+close p_passenger;
+end;
+
+
+CREATE OR REPLACE PACKAGE p_package AS
+  --Adds a Passenger
+  PROCEDURE addPassenger(p_id passenger.passenger_id%type, p_name passenger.first_name%type, p_lname passenger.last_name%type, p_gender passenger.gender%type, p_phone passenger.phone_no%type, p_tick passenger.ticket_no%type, p_age passenger.age%type, p_class passenger.class%type);
+  --Delete a Passenger
+  PROCEDURE delPassenger(p_id passenger.passenger_id%type);
+END p_package;
+
+
+CREATE OR REPLACE PACKAGE BODY p_package AS
+  PROCEDURE addPassenger(p_id passenger.passenger_id%type, p_name passenger.first_name%type,p_lname passenger.last_name%type,p_gender passenger.gender%type, p_phone passenger.phone_no%type, p_tick passenger.ticket_no%type, p_age passenger.age%type, p_class passenger.class%type)
+  IS 
+  BEGIN
+   INSERT INTO passenger(passenger_id, first_name,last_name, gender, phone_no, ticket_no, age, class)
+   VALUES(p_id, p_name, p_lname, p_gender, p_phone, p_tick, p_age, p_class);
+   END addPassenger;
+   
+Procedure delPassenger(p_id passenger.passenger_id%type) IS
+  BEGIN
+   DELETE from passenger
+   WHERE passenger_id = p_id;
+  END delPassenger;
+END p_package;  
+
+
+DECLARE 
+  pp_id passenger.passenger_id%type := :pp_id;
+BEGIN
+  --p_package.addPassenger(105,'Shivam','Sinha','M' ,7413547952 , 1115, 30, 'First Class AC');
+  p_package.delPassenger(:pp_id);
+  END;
+
+select * from passenger;
